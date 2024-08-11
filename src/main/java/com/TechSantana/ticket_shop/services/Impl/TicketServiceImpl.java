@@ -1,12 +1,16 @@
 package com.TechSantana.ticket_shop.services.Impl;
 
-import com.TechSantana.ticket_shop.dtos.BuyTicketDto;
+import com.TechSantana.ticket_shop.dtos.tickets.BuyTicketDto;
+import com.TechSantana.ticket_shop.models.Event;
 import com.TechSantana.ticket_shop.models.Ticket;
-import com.TechSantana.ticket_shop.repositories.TicketRepository;
+import com.TechSantana.ticket_shop.repositories.interfaces.TicketRepository;
+import com.TechSantana.ticket_shop.services.interfaces.EventService;
 import com.TechSantana.ticket_shop.services.interfaces.TicketService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,15 +18,30 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class TicketServiceImpl implements TicketService {
     @Autowired private TicketRepository ticketRepository;
 
+    @Autowired private EventService eventService;
+
     @Override
+    @Transactional
     public Ticket createTicket(BuyTicketDto dto) {
-        Ticket ticket = new Ticket(
-                dto.owner(), dto.show(), dto.price(), dto.date(), dto.meia()
-        );
-        return ticketRepository.save(ticket);
+        log.info("Creating ticket");
+
+        try{
+            Event event = eventService.getEvent(UUID.fromString(dto.event()));
+
+            Ticket ticket = new Ticket(
+                    dto.owner(), event, dto.price(), dto.meia()
+            );
+
+            event.getTickets().add(ticket);
+            event.setAvaliableTickets(event.getAvaliableTickets() - 1);
+            return ticketRepository.save(ticket);
+        } catch (Exception e){
+            throw e;
+        }
     }
 
     @Override
@@ -60,9 +79,7 @@ public class TicketServiceImpl implements TicketService {
 
     private Ticket converteDtoParaEntidade(Ticket ticket, BuyTicketDto dto){
         Optional.ofNullable(dto.owner()).ifPresent(ticket::setOwner);
-        Optional.ofNullable(dto.show()).ifPresent(ticket::setShow);
         Optional.ofNullable(dto.price()).ifPresent(ticket::setPrice);
-        Optional.ofNullable(dto.date()).ifPresent(ticket::setDate);
         Optional.ofNullable(dto.meia()).ifPresent(ticket::setMeia);
 
         return ticket;

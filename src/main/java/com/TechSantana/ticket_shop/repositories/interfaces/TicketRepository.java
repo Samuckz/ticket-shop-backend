@@ -1,4 +1,4 @@
-package com.TechSantana.ticket_shop.repositories;
+package com.TechSantana.ticket_shop.repositories.interfaces;
 
 import com.TechSantana.ticket_shop.models.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;

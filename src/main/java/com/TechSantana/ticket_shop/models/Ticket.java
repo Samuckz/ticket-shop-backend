@@ -24,21 +24,20 @@ public class Ticket implements Serializable {
 
     private String owner;
 
-    private String show;
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     private Double price;
-
-    private LocalDateTime date;
 
     private Boolean meia;
 
     private Boolean active;
 
-    public Ticket(String owner, String show, Double price, LocalDateTime date, Boolean meia) {
+    public Ticket(String owner, Event event, Double price, Boolean meia) {
         this.owner = owner;
-        this.show = show;
+        this.event = event;
         this.price = price;
-        this.date = date;
         this.meia = meia;
         this.active = true;
     }

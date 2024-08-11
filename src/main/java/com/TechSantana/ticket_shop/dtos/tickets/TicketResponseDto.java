@@ -1,4 +1,4 @@
-package com.TechSantana.ticket_shop.dtos;
+package com.TechSantana.ticket_shop.dtos.tickets;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

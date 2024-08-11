@@ -1,7 +1,6 @@
 package com.TechSantana.ticket_shop.services.interfaces;
 
-import com.TechSantana.ticket_shop.dtos.BuyTicketDto;
-import com.TechSantana.ticket_shop.dtos.TicketResponseDto;
+import com.TechSantana.ticket_shop.dtos.tickets.BuyTicketDto;
 import com.TechSantana.ticket_shop.models.Ticket;
 
 import java.util.List;
